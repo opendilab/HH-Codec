@@ -8,8 +8,6 @@
 ![wandb](https://img.shields.io/badge/wandb-0.16.6-orange?logo=wandb&logoColor=white)
 ![PyTorch Lightning](https://img.shields.io/badge/lightning-2.2.1-purple?logo=lightning&logoColor=white)
 
-# 🔥 News
-We expect to finalize and open-source the training code within two weeks.
 
 ## Installation
 To install HHCodec, follow these steps:
@@ -24,7 +22,29 @@ pip install -e .
 pip install pip==24.0
 pip install fairseq
 ```
+## Train
 
+### Step 1: Prepare the Training Dataset
+Ensure your dataset is preprocessed by following the instructions in [`dataset`](dataset)
+
+### Step 2: Modify Configuration Files
+Before starting training, update the configuration settings
+```python
+# Open and modify the following file "configs/train.yaml"
+# Adjust parameters such as:
+# - log settings
+# - train_path
+# - save_dir
+# - device (e.g., CPU/GPU)
+```
+We expect to finalize and open-source the training code within two weeks.
+
+### Step 3: Start Training
+Once the dataset is prepared and the configuration is set, launch the training process:
+```python
+cd HH-Codec
+python train.py fit --config configs/train.yaml
+```
 
 ## Acknowledgement
 The HHCodec codebase is adapted from the following repositories:
