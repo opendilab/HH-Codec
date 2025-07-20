@@ -1,0 +1,65 @@
+seed_everything: true
+trainer:
+  accelerator: gpu
+  strategy: ddp_find_unused_parameters_true
+  devices: 8
+  num_nodes: 1
+  precision: 32
+  max_epochs: 50
+  check_val_every_n_epoch: 1
+  num_sanity_val_steps: 0
+  log_every_n_steps: 100
+  callbacks:
+    - class_path: lightning.pytorch.callbacks.ModelCheckpoint
+      init_args:
+        dirpath: "HH_codec/8k_ration_20_loss" 
+        save_top_k: -1 
+    - class_path: lightning.pytorch.callbacks.LearningRateMonitor
+      init_args:
+        logging_interval: step
+  logger:
+    class_path: lightning.pytorch.loggers.WandbLogger
+    init_args:
+        save_dir: "HH_codec/8k_ration_20_loss" 
+        project: "endresult_tmp"  
+        name: "mel_big"           
+
+model:
+  class_path: hhcodec.model.VQModel
+  init_args:
+    ddconfig:
+      causal: true
+      dimension: 512
+      ratios: [8,8,4,4]
+    
+    lossconfig:
+      target: hhcodec.losses.stft_simvq_mel.VQSTFTWithDiscriminator
+      params:
+        disc_conditional: False
+        disc_in_channels: 1
+        disc_start: 0 
+        codebook_enlarge_ratio: 0
+        codebook_enlarge_steps: 2000
+        sample_rate: 24000
+        commit_weight: 1000.0
+        gen_loss_weight: 1.0
+        mel_loss_coeff: 45.0
+        mrd_loss_coeff: 1.0
+
+
+    distrillmodel: hubert
+    sample_rate: 24000
+    audio_normalize: false
+    learning_rate: 1e-4
+    scheduler_type: "None"
+    use_ema: true
+
+data:
+  class_path: hhcodec.data.speechtokenizer_24k.SpeechTokenizerDataModule
+  init_args:
+    batch_size: 6
+    num_workers: 8
+    train_path : ["",""]
+    val_path : ""
+
+ckpt_path: null

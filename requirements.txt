@@ -1,0 +1,6 @@
+bigvgan
+swanlab
+vector_quantize_pytorch
+timm
+torchaudio
+transformers
