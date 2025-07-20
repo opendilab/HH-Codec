@@ -11,6 +11,21 @@
 # 🔥 News
 We expect to finalize and open-source the training code within two weeks.
 
+## Installation
+To install HHCodec, follow these steps:
+```python
+conda create -n hhcodec python=3.10 # it must >3.10 beacause use bigvgan
+conda activate hhcodec
+git clone https://github.com/rongkunxue/HH-Codec.git
+cd HH-Codec 
+pip install -e .
+
+#if you want to eval by UTMOS
+pip install pip==24.0
+pip install fairseq
+```
+
+
 ## Acknowledgement
 The HHCodec codebase is adapted from the following repositories:
 - [seed-tts-eval](https://github.com/BytedanceSpeech/seed-tts-eval)
