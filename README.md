@@ -37,13 +37,11 @@ Before starting training, update the configuration settings
 # - save_dir
 # - device (e.g., CPU/GPU)
 ```
-We expect to finalize and open-source the training code within two weeks.
 
 ### Step 3: Start Training
 Once the dataset is prepared and the configuration is set, launch the training process:
 ```python
-cd HH-Codec
-python train.py fit --config configs/train.yaml
+#We expect to finalize and open-source the training code within two weeks.
 ```
 
 ## Acknowledgement
