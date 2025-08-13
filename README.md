@@ -30,8 +30,6 @@ Ensure your dataset is preprocessed by following the instructions in [`dataset`]
 ### Step 2: Modify Configuration Files
 Before starting training, update the configuration settings
 ```python
-cd HH-Codec
-python train.py fit --config configs/train.yaml
 # Open and modify the following file "configs/train.yaml"
 # Adjust parameters such as:
 # - log settings
@@ -43,9 +41,24 @@ python train.py fit --config configs/train.yaml
 ### Step 3: Start Training
 Once the dataset is prepared and the configuration is set, launch the training process:
 ```python
-
+cd HH-Codec
+python train.py fit --config configs/train.yaml
 ```
 
+### Part4: How to use HH-codec 
+You can simply use the training set from part 1, the configuration from part 2, and the training script from part 3 to reproduce the results of the model described in the paper with a single run. Since we are still refining the algorithm, an updated set of optimal model weights will be released after the final version of the paper is accepted by the journal.
+```python
+wav, sr = torchaudio.load(audio_path).to(device))
+wav = convert_audio(wav, sr, 24000, 1).unsqueeze(0).unsqueeze(0) #eg. [B,1,24000]
+# Generating discrete codecs
+_, _, _, _,quant,_,index = model.encode(audio)
+# Get quant from index only
+quant = model.quantize.indices_to_codes(index)
+# Reconstruct audio from raw wav
+reconstructed_mel, reconstructed_audios = model.decode(quant)
+```
+
+## 
 ## Acknowledgement
 The HHCodec codebase is adapted from the following repositories:
 - [seed-tts-eval](https://github.com/BytedanceSpeech/seed-tts-eval)
