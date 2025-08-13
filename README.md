@@ -45,7 +45,7 @@ cd HH-Codec
 python train.py fit --config configs/train.yaml
 ```
 
-### Part4: How to use HH-codec 
+## How to use HH-codec 
 You can simply use the training set from part 1, the configuration from part 2, and the training script from part 3 to reproduce the results of the model described in the paper with a single run. Since we are still refining the algorithm, an updated set of optimal model weights will be released after the final version of the paper is accepted by the journal.
 ```python
 wav, sr = torchaudio.load(audio_path).to(device))
