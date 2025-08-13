@@ -30,6 +30,8 @@ Ensure your dataset is preprocessed by following the instructions in [`dataset`]
 ### Step 2: Modify Configuration Files
 Before starting training, update the configuration settings
 ```python
+cd HH-Codec
+python train.py fit --config configs/train.yaml
 # Open and modify the following file "configs/train.yaml"
 # Adjust parameters such as:
 # - log settings
@@ -41,7 +43,7 @@ Before starting training, update the configuration settings
 ### Step 3: Start Training
 Once the dataset is prepared and the configuration is set, launch the training process:
 ```python
-#We expect to finalize and open-source the training code within two weeks.
+
 ```
 
 ## Acknowledgement
