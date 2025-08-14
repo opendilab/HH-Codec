@@ -1,19 +1,23 @@
-import torch
-import torch.nn.functional as F
-import lightning as L
 import math
+from collections import OrderedDict
 from contextlib import contextmanager
 
-from hhcodec.neuralmodel.seanet import SEANetEncoder as Encoder
-from hhcodec.neuralmodel.seanet import SEANetDecoder as Decoder
-from hhcodec.neuralmodel.vocosbackbone import VocosBackbone as Backbone
-from hhcodec.lr_scheduler import Scheduler_LinearWarmup, Scheduler_LinearWarmup_CosineDecay
-from hhcodec.util import requires_grad,LitEma,instantiate_from_config
-from hhcodec.vq import ResidualSimVQ
 import bigvgan
-from collections import OrderedDict
-from einops import rearrange
+import lightning as L
+import torch
 import torch.nn as nn
+import torch.nn.functional as F
+from einops import rearrange
+
+from hhcodec.lr_scheduler import (
+    Scheduler_LinearWarmup,
+    Scheduler_LinearWarmup_CosineDecay,
+)
+from hhcodec.neuralmodel.seanet import SEANetDecoder as Decoder
+from hhcodec.neuralmodel.seanet import SEANetEncoder as Encoder
+from hhcodec.neuralmodel.vocosbackbone import VocosBackbone as Backbone
+from hhcodec.util import LitEma, instantiate_from_config, requires_grad
+from hhcodec.vq import ResidualSimVQ
 
 
 class melHead(nn.Module):

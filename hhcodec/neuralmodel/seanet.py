@@ -13,6 +13,7 @@ import torch.nn as nn
 
 from hhcodec.neuralmodel.conv import SConv1d, SConvTranspose1d
 
+
 class SLSTM(nn.Module):
     """
     LSTM without worrying about the hidden state, nor the layout of the data.

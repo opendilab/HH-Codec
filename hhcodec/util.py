@@ -1,10 +1,13 @@
+import importlib
+import logging
+import os
+import random
+from typing import Optional
+
+import numpy as np
 import torch
 import torch.nn as nn
-import os, importlib
-import numpy as np 
-import logging
-from typing import Optional
-import random
+
 
 def count_params(model):
     total_params = sum(p.numel() for p in model.parameters())

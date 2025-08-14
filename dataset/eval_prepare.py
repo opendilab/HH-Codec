@@ -1,14 +1,14 @@
-import sys, os
-from tqdm import tqdm
-from pathlib import Path
-import torchaudio
-import torch
-import json
 import argparse
-from tqdm import tqdm
-import random
-import numpy as np
+import json
 import os
+import random
+import sys
+from pathlib import Path
+
+import numpy as np
+import torch
+import torchaudio
+from tqdm import tqdm
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()

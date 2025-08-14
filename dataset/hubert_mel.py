@@ -1,15 +1,17 @@
 # Learned from: https://github.com/ZhangXInFD/SpeechTokenizer/blob/main/scripts/hubert_rep_extract.py
-from transformers import HubertModel, Wav2Vec2FeatureExtractor
-from pathlib import Path
-import torchaudio
-import torch
-import json
 import argparse
-from tqdm import tqdm
-import random
-import numpy as np
+import json
 import os
+import random
+from pathlib import Path
+
 import librosa
+import numpy as np
+import torch
+import torchaudio
+from tqdm import tqdm
+from transformers import HubertModel, Wav2Vec2FeatureExtractor
+
 from hhcodec.util import seed_everything
 
 if __name__ == "__main__":

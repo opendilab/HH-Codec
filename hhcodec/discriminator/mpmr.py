@@ -1,12 +1,11 @@
 import typing
-from typing import Tuple, List
+from typing import Dict, List, Optional, Tuple, Union
 
 import torch
 from torch import nn
 from torch.nn import Conv2d
 from torch.nn.utils import weight_norm
-from typing import Optional, List, Union, Dict, Tuple
-from torchaudio.transforms import  Resample
+from torchaudio.transforms import Resample
 
 
 class MultiPeriodDiscriminator(nn.Module):

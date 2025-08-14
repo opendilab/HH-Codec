@@ -1,10 +1,22 @@
+import typing as tp
+
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-import typing as tp
-from hhcodec.discriminator.mpmr import MultiPeriodDiscriminator, MultiResolutionDiscriminator
+
 from hhcodec.discriminator.dac import DACDiscriminator
-from hhcodec.losses.speech_loss import MelSpecReconstructionLoss, GeneratorLoss, DiscriminatorLoss, FeatureMatchingLoss, DACGANLoss
+from hhcodec.discriminator.mpmr import (
+    MultiPeriodDiscriminator,
+    MultiResolutionDiscriminator,
+)
+from hhcodec.losses.speech_loss import (
+    DACGANLoss,
+    DiscriminatorLoss,
+    FeatureMatchingLoss,
+    GeneratorLoss,
+    MelSpecReconstructionLoss,
+)
+
 
 def safe_log(x: torch.Tensor, clip_val: float = 1e-7) -> torch.Tensor:
     """

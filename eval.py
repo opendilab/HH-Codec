@@ -1,18 +1,21 @@
+import argparse
+import glob
 import json
-from hhcodec.model import VQModel
+import math
 import os
 import sys
-import glob
-import torchaudio
-import torch
-import math
 from pathlib import Path
-from tqdm import tqdm
-import argparse
+
+import torch
+import torchaudio
 from torch import utils
+from tqdm import tqdm
+
 from hhcodec.dataloader import audiotestDataset
 from hhcodec.metric.utmos import UTMOSScore
+from hhcodec.model import VQModel
 from hhcodec.util import print_and_save
+
 
 def parse_args():
     parser = argparse.ArgumentParser(description="inference parameters")

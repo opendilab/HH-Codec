@@ -1,10 +1,10 @@
+from collections import namedtuple
+
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
 from einops import rearrange
 from torch.nn.utils import weight_norm
-
-from collections import namedtuple
 
 STFTParams = namedtuple(
     "STFTParams",
