@@ -12,7 +12,7 @@
 ## Installation
 To install HHCodec, follow these steps:
 ```python
-conda create -n hhcodec python=3.10 # it must >3.10 beacause use bigvgan
+conda create -n hhcodec python=3.10 # it must >3.10 because use bigvgan
 conda activate hhcodec
 git clone https://github.com/opendilab/HH-Codec.git
 cd HH-Codec 

@@ -86,8 +86,8 @@ if __name__ == "__main__":
             input_values = feature_extractor(
                 wav_16k.squeeze(0), sampling_rate=16000, return_tensors="pt"
             ).input_values
-            ouput = model(input_values.to(device), output_hidden_states=True)
-            rep = torch.mean(torch.stack(ouput.hidden_states), axis=0)
+            output = model(input_values.to(device), output_hidden_states=True)
+            rep = torch.mean(torch.stack(output.hidden_states), axis=0)
 
             if str(dataset_path) in audio_file:
                 rep_file = (

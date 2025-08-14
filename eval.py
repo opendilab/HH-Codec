@@ -67,7 +67,7 @@ def main(args):
                 prompt_text = batch["prompt_text"][0]
                 infer_text = batch["infer_text"][0]
                 prompt_wav_path = batch["prompt_wav_path"][0]
-                orgin_wav_path = batch["audio_path"][0].replace("infer","wavs")
+                origin_wav_path = batch["audio_path"][0].replace("infer","wavs")
                 audio = batch["waveform"].to(DEVICE)
                 with model.ema_scope():
                     quant, diff, indices, loss_break,first_quant,second_quant,first_index  = model.encode(audio)
@@ -76,7 +76,7 @@ def main(args):
                 directory = os.path.dirname(generative_audio_path)
                 os.makedirs(directory, exist_ok=True)
                 torchaudio.save(generative_audio_path, reconstructed_audios[0].cpu().clip(min=-0.99, max=0.99), sample_rate=24000, encoding='PCM_S', bits_per_sample=16)
-                out_line = '|'.join([utt, prompt_text, prompt_wav_path,infer_text,orgin_wav_path,generative_audio_path])
+                out_line = '|'.join([utt, prompt_text, prompt_wav_path,infer_text,origin_wav_path,generative_audio_path])
                 paths.append(out_line)
             with open(f"{args.ckpt_path.parent}/recons/{args.dataset_name}.txt", "w") as f:
                 for path in paths:
