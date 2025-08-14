@@ -149,7 +149,7 @@ class SEANetEncoder(nn.Module):
 
         if lstm:
             model += [SLSTM(mult * n_filters, num_layers=lstm,bidirectional=True)]
-       
+
         mult = mult * 2 if bidirectional else mult
 
         model += [

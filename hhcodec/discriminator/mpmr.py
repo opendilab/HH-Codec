@@ -189,7 +189,7 @@ class DiscriminatorR(nn.Module):
 
     def spectrogram(self, x: torch.Tensor) -> torch.Tensor:
         n_fft, hop_length, win_length = self.resolution
-        
+
         magnitude_spectrogram = torch.stft(
             x.squeeze(1),
             n_fft=n_fft,
@@ -214,7 +214,7 @@ class DiscriminatorCQT(nn.Module):
 
         self.in_channels = 1
         self.out_channels = 1
-        self.fs = sample_rate 
+        self.fs = sample_rate
         self.hop_length = hop_length
         self.n_octaves = n_octaves
         self.bins_per_octave = bins_per_octave

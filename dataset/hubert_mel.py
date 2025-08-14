@@ -16,27 +16,27 @@ from hhcodec.util import seed_everything
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    
+
     rep_dir = os.environ.get("REP_PATH")
 
     parser.add_argument(
         "--dataset_name",
         type=str,
-        required=True,  
+        required=True,
         help="Name of the dataset.",
     )
 
     parser.add_argument(
         "--dataset_path",
         type=str,
-        required=True,  
+        required=True,
         help="Path to the dataset.",
     )
 
     parser.add_argument(
         "--seed",
         type=int,
-        default=0,  
+        default=0,
         help="Random seed for reproducibility (default: 0).",
     )
 
