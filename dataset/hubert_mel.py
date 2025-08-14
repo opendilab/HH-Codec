@@ -18,6 +18,8 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
 
     rep_dir = os.environ.get("REP_PATH")
+    if rep_dir is None:
+        raise ValueError("Environment variable REP_PATH is not set")
 
     parser.add_argument(
         "--dataset_name",
@@ -73,7 +75,7 @@ if __name__ == "__main__":
 
     print(f"A total of {len(file_list)} samples will be processed.")
     with torch.no_grad():
-        for i, audio_file in tqdm(enumerate(file_list)):
+        for i, audio_file in tqdm(enumerate(file_list), total=len(file_list)):
             wav_24k, sample_rate = librosa.load(audio_file, sr=24000, mono=1 == 1)
             wav_24k = torch.as_tensor(wav_24k)
             if wav_24k.size(-1) < segment_size:
@@ -103,4 +105,4 @@ if __name__ == "__main__":
 
             train_list = os.path.join(rep_dir, f"{args.dataset_name}.txt")
             with open(train_list, "a+", encoding="utf-8") as f:
-                f.write(f'{audio_file}\t{rep_file}\n')
+                f.write(f"{audio_file}\t{rep_file}\n")
