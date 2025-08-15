@@ -1,16 +1,25 @@
 
 # HH-Codec: High Compression High-fidelity Discrete Neural Codec for Spoken Language Modeling
+<p align="center">
+  If you find this project useful, please give us a star 🌟.
+</p>
+<p align="center">
+  <img src="https://img.shields.io/twitter/url?style=social&url=https%3A%2F%2Ftwitter.com%2Fopendilab" alt="Twitter">
+  <img src="https://img.shields.io/badge/python-3.10-blue?logo=python&logoColor=white" alt="Python 3.10">
+  <img src="https://img.shields.io/badge/pytorch-2.5.0-blue" alt="PyTorch">
+  <img src="https://img.shields.io/badge/wandb-0.16.6-orange?logo=wandb&logoColor=white" alt="wandb">
+  <img src="https://img.shields.io/badge/lightning-2.2.1-purple?logo=lightning&logoColor=white" alt="PyTorch Lightning">
+  <img src="https://img.shields.io/twitter/url?style=social&url=https%3A%2F%2Ftwitter.com%2Fopendilab" alt="Twitter">
+    <a href="https://arxiv.org/abs/2507.18897">
+    <img src="https://img.shields.io/badge/arXiv-2507.18897-b31b1b.svg?logo=arxiv&logoColor=white" alt="arXiv:2507.18897">
+  </a>
+    <a href="https://github.com/opendilab/HH-Codec/"><img src="https://img.shields.io/github/stars/opendilab/HH-Codec?style=social" alt="GitHub Repo stars"></a>
+
+
+</p>
+
 🎉 Discrete Neural Codec With 24 Tokens Per Second (24KHZ) for Spoken Language Modeling!
-
-
-[![Twitter](https://img.shields.io/twitter/url?style=social&url=https%3A%2F%2Ftwitter.com%2Fopendilab)](https://twitter.com/opendilab)
-![Python 3.10](https://img.shields.io/badge/python-3.10-blue?logo=python&logoColor=white)
-![PyTorch](https://img.shields.io/badge/pytorch-2.5.0-blue)
-![wandb](https://img.shields.io/badge/wandb-0.16.6-orange?logo=wandb&logoColor=white)
-![PyTorch Lightning](https://img.shields.io/badge/lightning-2.2.1-purple?logo=lightning&logoColor=white)
-
-
-## Installation
+## ⚙️ Installation
 To install HHCodec, follow these steps:
 ```python
 conda create -n hhcodec python=3.10 # it must >3.10 because use bigvgan
@@ -25,7 +34,7 @@ pip install fairseq
 # If you encounter conflicts, try:
 pip install pip==24.0
 ```
-## Train
+## 🚀 Train
 
 ### Step 1: Prepare the Training Dataset
 Ensure your dataset is preprocessed by following the instructions in [`dataset`](dataset)
@@ -48,7 +57,7 @@ cd HH-Codec
 python train.py fit --config configs/train.yaml
 ```
 
-## How to use HH-codec 
+## 🧩 How to use HH-codec 
 You can simply use the training set from part 1, the configuration from part 2, and the training script from part 3 to reproduce the results of the model described in the paper with a single run. Since we are still refining the algorithm, an updated set of optimal model weights will be released after the final version of the paper is accepted by the journal.
 ```python
 wav, sr = torchaudio.load(audio_path).to(device))
@@ -61,9 +70,20 @@ quant = model.quantize.indices_to_codes(index)
 reconstructed_mel, reconstructed_audios = model.decode(quant)
 ```
 
-## 
-## Acknowledgement
-The HHCodec codebase is adapted from the following repositories:
+## 🌏 Citation
+```latex
+@article{xue2025hh,
+  title={HH-Codec: High Compression High-fidelity Discrete Neural Codec for Spoken Language Modeling},
+  author={Xue, Rongkun and Niu, Yazhe and Hu, Shuai and Yin, Zixin and Yao, Yongqiang and Yang, Jing},
+  journal={arXiv preprint arXiv:2507.18897},
+  year={2025}
+}
+```
+
+
+## 💓 Acknowledgement
+This project has been developed partially based on the following pioneering works on GitHub repositories.
+We express our profound gratitude for these foundational resources:
 - [seed-tts-eval](https://github.com/BytedanceSpeech/seed-tts-eval)
 - [vocos](https://github.com/gemelo-ai/vocos)
 - [vector-quantize-pytorch](https://github.com/lucidrains/vector-quantize-pytorch)
@@ -72,5 +92,7 @@ The HHCodec codebase is adapted from the following repositories:
 - [WavTokenizer](https://github.com/jishengpeng/WavTokenizer)
 - [moshi](https://github.com/kyutai-labs/moshi)
 
-A huge thanks to the authors of these projects for their outstanding contributions! 🎉
+
+## 🏷️ License
+All code within this repository is under [Apache License 2.0](https://www.apache.org/licenses/LICENSE-2.0).
 
