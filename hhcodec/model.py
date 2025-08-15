@@ -1,36 +1,40 @@
-import torch
-import torch.nn.functional as F
-import lightning as L
 import math
+from collections import OrderedDict
 from contextlib import contextmanager
 
-from hhcodec.neuralmodel.seanet import SEANetEncoder as Encoder
-from hhcodec.neuralmodel.seanet import SEANetDecoder as Decoder
-from hhcodec.neuralmodel.vocosbackbone import VocosBackbone as Backbone
-from hhcodec.lr_scheduler import Scheduler_LinearWarmup, Scheduler_LinearWarmup_CosineDecay
-from hhcodec.util import requires_grad,LitEma,instantiate_from_config
-from hhcodec.vq import ResidualSimVQ
 import bigvgan
-from collections import OrderedDict
-from einops import rearrange
+import lightning as L
+import torch
 import torch.nn as nn
+import torch.nn.functional as F
+from einops import rearrange
+
+from hhcodec.lr_scheduler import (
+    Scheduler_LinearWarmup,
+    Scheduler_LinearWarmup_CosineDecay,
+)
+from hhcodec.neuralmodel.seanet import SEANetDecoder as Decoder
+from hhcodec.neuralmodel.seanet import SEANetEncoder as Encoder
+from hhcodec.neuralmodel.vocosbackbone import VocosBackbone as Backbone
+from hhcodec.util import LitEma, instantiate_from_config, requires_grad
+from hhcodec.vq import ResidualSimVQ
 
 
 class melHead(nn.Module):
     def __init__(self):
-        super(melHead, self).__init__() 
+        super(melHead, self).__init__()
         self.transconv = nn.ConvTranspose1d(
-            in_channels=768, 
-            out_channels=100,  
-            kernel_size=4,                
-            stride=4,  
+            in_channels=768,
+            out_channels=100,
+            kernel_size=4,
+            stride=4,
             padding=0,
             output_padding=0,
         )
 
     def forward(self, x):
-        x = x.transpose(1, 2)  
-        x = self.transconv(x) 
+        x = x.transpose(1, 2)
+        x = self.transconv(x)
         return x
 
 class VQModel(L.LightningModule):
@@ -59,7 +63,7 @@ class VQModel(L.LightningModule):
         self.encoder = Encoder(**ddconfig)
         self.decoder = Decoder(**ddconfig)
         self.backbone = Backbone(
-            input_channels=512, 
+            input_channels=512,
             dim=768,
             intermediate_dim=2304,
             num_layers=12,
@@ -75,14 +79,14 @@ class VQModel(L.LightningModule):
         )
         self.melhead = melHead()
         self.loss = instantiate_from_config(lossconfig)
-        
+
         self.audio_normalize = audio_normalize
         self.bigvqgan = bigvgan.BigVGAN.from_pretrained('nvidia/bigvgan_v2_24khz_100band_256x', use_cuda_kernel=False)
 
         self.quantize = ResidualSimVQ(
             dim = 512,
             codebook_size = 8192,
-            rotation_trick = True,  
+            rotation_trick = True,
             codebook_transform = nn.Sequential(
                 nn.Linear(512, 1024),
                 nn.ReLU(),
@@ -136,19 +140,19 @@ class VQModel(L.LightningModule):
         save the state_dict and filter out the 
         '''
         return {k: v for k, v in super().state_dict(*args, destination, prefix, keep_vars).items() if ("inception_model" not in k and "lpips_vgg" not in k and "lpips_alex" not in k)}
-        
+
     def init_from_ckpt(self, path, ignore_keys=list(), stage=None):
         sd = torch.load(path, map_location="cpu")["state_dict"]
         ema_mapping = {}
         new_params = OrderedDict()
         if stage == "transformer": ### directly use ema encoder and decoder parameter
             if self.use_ema:
-                for k, v in sd.items(): 
+                for k, v in sd.items():
                     if "encoder" in k:
                         if "model_ema" in k:
                             k = k.replace("model_ema.", "") #load EMA Encoder or Decoder
                             new_k = ema_mapping[k]
-                            new_params[new_k] = v   
+                            new_params[new_k] = v
                         s_name = k.replace('.', '')
                         ema_mapping.update({s_name: k})
                         continue
@@ -156,10 +160,10 @@ class VQModel(L.LightningModule):
                         if "model_ema" in k:
                             k = k.replace("model_ema.", "") #load EMA Encoder or Decoder
                             new_k = ema_mapping[k]
-                            new_params[new_k] = v 
+                            new_params[new_k] = v
                         s_name = k.replace(".", "")
                         ema_mapping.update({s_name: k})
-                        continue 
+                        continue
             else: #also only load the Generator
                 for k, v in sd.items():
                     if "encoder" in k:
@@ -180,7 +184,7 @@ class VQModel(L.LightningModule):
             scale = scale.view(-1, 1)
         else:
             scale = None
-        
+
         h = self.encoder(x)
         # (quant, emb_loss, info), loss_breakdown = self.quantize(h)
         quant, info, loss_breakdown,first_quant,second_quant,first_index = self.quantize(h)
@@ -206,7 +210,7 @@ class VQModel(L.LightningModule):
         feature = self.conv_transpose(first_quant)
         feature = rearrange(feature, 'b d t -> b t d')
         return mel,dec, diff, loss_break,feature
-    
+
     def d_axis_distill_loss(self,feature, target_feature):
         n = min(feature.size(1), target_feature.size(1))
         distill_loss = - torch.log(torch.sigmoid(torch.nn.functional.cosine_similarity(feature[:, :n], target_feature[:, :n], axis=1))).mean()
@@ -217,7 +221,7 @@ class VQModel(L.LightningModule):
         l1_loss = F.l1_loss(feature[:, :n], target_feature[:, :n], reduction='mean')
         sim_loss = - torch.log(torch.sigmoid(torch.nn.functional.cosine_similarity(feature[:, :n], target_feature[:, :n], axis=-1))).mean()
         distill_loss = l1_loss + lambda_sim * sim_loss
-        return distill_loss 
+        return distill_loss
         # def get_input(self, batch):
         #     x = batch["waveform"].to(memory_format=torch.contiguous_format)
         #     return x.float()
@@ -251,7 +255,7 @@ class VQModel(L.LightningModule):
         if self.scheduler_type != "None":
             scheduler_gen.step()
         log_dict_ae["train/codebook_util"] = torch.tensor(sum(self.codebook_count) / len(self.codebook_count))
-        
+
         # optimize discriminator
         discloss, log_dict_disc = self.loss(loss_distill,eloss, loss_break, mel,mel_rec,x, xrec, 1, self.global_step,
                                             split="train")
@@ -263,14 +267,14 @@ class VQModel(L.LightningModule):
             scheduler_disc.step()
         if torch.distributed.get_rank() == 0:
             print(log_dict_ae, log_dict_disc)
-        
+
         self.log_dict(log_dict_disc, prog_bar=False, logger=True, on_step=True, on_epoch=True)
         self.log_dict(log_dict_ae, prog_bar=False, logger=True, on_step=True, on_epoch=True)
-    
+
     def on_train_batch_end(self, *args, **kwargs):
         if self.use_ema and self.current_epoch >= 10:
             self.model_ema(self)
-            
+
     def on_train_epoch_start(self):
         self.codebook_count = [0] * 8192
         if self.current_epoch < 10:
@@ -279,11 +283,11 @@ class VQModel(L.LightningModule):
         else:
             for param in self.bigvqgan.parameters():
                 param.requires_grad = True
-        
+
     def on_validation_epoch_start(self):
         self.codebook_count = [0] * 8192
 
-    def validation_step(self, batch, batch_idx): 
+    def validation_step(self, batch, batch_idx):
         if self.use_ema:
             with self.ema_scope():
                 log_dict_ema = self._validation_step(batch, batch_idx, suffix="_ema")
@@ -305,7 +309,7 @@ class VQModel(L.LightningModule):
         for ind in indices.unique():
             self.codebook_count[ind] = 1
         log_dict_ae[f"val{suffix}/codebook_util"] = torch.tensor(sum(self.codebook_count) / len(self.codebook_count))
-    
+
         self.log_dict(log_dict_ae, prog_bar=False, logger=True, on_step=True, on_epoch=True)
         self.log_dict(log_dict_disc, prog_bar=False, logger=True, on_step=True, on_epoch=True)
 
@@ -320,7 +324,7 @@ class VQModel(L.LightningModule):
                     list(self.quantize.parameters()) +
                     list(self.backbone.parameters()) +
                     list(self.melhead.parameters()) +
-                    list(self.bigvqgan.parameters()), 
+                    list(self.bigvqgan.parameters()),
                     lr=lr,
                     betas=(0.5, 0.9)
                 )
@@ -336,7 +340,7 @@ class VQModel(L.LightningModule):
 
         if self.scheduler_type == "None":
             return ({"optimizer": opt_gen}, {"optimizer": opt_disc})
-    
+
         if self.scheduler_type == "linear-warmup":
             scheduler_ae = torch.optim.lr_scheduler.LambdaLR(opt_gen, Scheduler_LinearWarmup(warmup_steps))
             scheduler_disc = torch.optim.lr_scheduler.LambdaLR(opt_disc, Scheduler_LinearWarmup(warmup_steps))

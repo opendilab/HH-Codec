@@ -1,10 +1,13 @@
+import importlib
+import logging
+import os
+import random
+from typing import Optional
+
+import numpy as np
 import torch
 import torch.nn as nn
-import os, importlib
-import numpy as np 
-import logging
-from typing import Optional
-import random
+
 
 def count_params(model):
     total_params = sum(p.numel() for p in model.parameters())
@@ -143,14 +146,14 @@ def requires_grad(model, flag=True):
 
 
 class LitEma(nn.Module):
-    def __init__(self, model, decay=0.999, use_num_upates=False):
+    def __init__(self, model, decay=0.999, use_num_updates=False):
         super().__init__()
         if decay < 0.0 or decay > 1.0:
             raise ValueError('Decay must be between 0 and 1')
 
         self.m_name2s_name = {}
         self.register_buffer('decay', torch.tensor(decay, dtype=torch.float32))
-        self.register_buffer('num_updates', torch.tensor(0, dtype=torch.int) if use_num_upates
+        self.register_buffer('num_updates', torch.tensor(0, dtype=torch.int) if use_num_updates
         else torch.tensor(-1, dtype=torch.int))
 
         for name, p in model.named_parameters():
@@ -288,23 +291,23 @@ class CheckpointSaver:
         """
         if not os.path.exists(dirpath): os.makedirs(dirpath)
         self.dirpath = dirpath
-        self.top_n = top_n 
+        self.top_n = top_n
         self.decreasing = decreasing
         self.top_model_paths = []
         self.best_metric_val = np.inf if decreasing else -np.inf
-        
+
     def __call__(self, model, epoch, metric_val):
         model_path = os.path.join(self.dirpath, model.__class__.__name__ + f'_epoch{epoch}.pt')
         save = metric_val<self.best_metric_val if self.decreasing else metric_val>self.best_metric_val
-        if save: 
+        if save:
             logging.info(f"Current metric value better than {metric_val} better than best {self.best_metric_val}, saving model at {model_path}")
             self.best_metric_val = metric_val
             torch.save(model.state_dict(), model_path)
             self.top_model_paths.append({'path': model_path, 'score': metric_val})
             self.top_model_paths = sorted(self.top_model_paths, key=lambda o: o['score'], reverse=not self.decreasing)
-        if len(self.top_model_paths)>self.top_n: 
+        if len(self.top_model_paths)>self.top_n:
             self.cleanup()
-    
+
     def cleanup(self):
         to_remove = self.top_model_paths[self.top_n:]
         logging.info(f"Removing extra models.. {to_remove}")
@@ -313,5 +316,5 @@ class CheckpointSaver:
         self.top_model_paths = self.top_model_paths[:self.top_n]
 
 def print_and_save(message, file):
-    print(message)  
-    file.write(message + '\n') 
+    print(message)
+    file.write(message + '\n')

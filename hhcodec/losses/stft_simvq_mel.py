@@ -1,10 +1,22 @@
+import typing as tp
+
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-import typing as tp
-from hhcodec.discriminator.mpmr import MultiPeriodDiscriminator, MultiResolutionDiscriminator
+
 from hhcodec.discriminator.dac import DACDiscriminator
-from hhcodec.losses.speech_loss import MelSpecReconstructionLoss, GeneratorLoss, DiscriminatorLoss, FeatureMatchingLoss, DACGANLoss
+from hhcodec.discriminator.mpmr import (
+    MultiPeriodDiscriminator,
+    MultiResolutionDiscriminator,
+)
+from hhcodec.losses.speech_loss import (
+    DACGANLoss,
+    DiscriminatorLoss,
+    FeatureMatchingLoss,
+    GeneratorLoss,
+    MelSpecReconstructionLoss,
+)
+
 
 def safe_log(x: torch.Tensor, clip_val: float = 1e-7) -> torch.Tensor:
     """
@@ -24,7 +36,7 @@ class VQSTFTWithDiscriminator(nn.Module):
                  disc_num_layers=3, disc_in_channels=1, disc_factor=1.0, disc_weight=1.0,
                  commit_weight = 0.25, codebook_enlarge_ratio=3, codebook_enlarge_steps=2000,
                  perceptual_weight=1.0, use_actnorm=False, disc_conditional=False,
-                 disc_loss="hinge", gen_loss_weight=None, lecam_loss_weight=None, 
+                 disc_loss="hinge", gen_loss_weight=None, lecam_loss_weight=None,
                  mel_loss_coeff=None, mrd_loss_coeff=None,
                  sample_rate=None):
         super().__init__()
@@ -37,7 +49,7 @@ class VQSTFTWithDiscriminator(nn.Module):
         self.distill_loss_coeff = 10
         self.mel_loss_coeff=mel_loss_coeff
         self.mrd_loss_coeff=mrd_loss_coeff
-        
+
         self.multiperioddisc = MultiPeriodDiscriminator()
         self.multiresddisc = MultiResolutionDiscriminator()
         self.dac = DACDiscriminator()
@@ -46,21 +58,21 @@ class VQSTFTWithDiscriminator(nn.Module):
         self.gen_loss = GeneratorLoss()
         self.feat_matching_loss = FeatureMatchingLoss()
         self.melspec_loss = MelSpecReconstructionLoss(sample_rate=sample_rate)
-        
+
         self.discriminator_iter_start = disc_start
-        
+
         self.disc_factor = disc_factor
         self.discriminator_weight = disc_weight
-                    
+
     def forward(self,loss_distill, codebook_loss, loss_break, mel,mel_rec,inputs, reconstructions, optimizer_idx,
                 global_step, last_layer=None, cond=None, split="train"):
-        
+
         # now the GAN part
         if optimizer_idx == 0:
             # generator update
-            
+
             loss_dac_1, loss_dac_2 = self.dacdiscriminator.generator_loss(reconstructions, inputs)
-            
+
             _, gen_score_mp, fmap_rs_mp, fmap_gs_mp = self.multiperioddisc(
                     y=inputs, y_hat=reconstructions
                 )
@@ -75,7 +87,7 @@ class VQSTFTWithDiscriminator(nn.Module):
             loss_fm_mrd = self.feat_matching_loss(fmap_r=fmap_rs_mrd, fmap_g=fmap_gs_mrd) / len(fmap_rs_mrd)
 
             mel_loss = self.melspec_loss(reconstructions, inputs)
-            
+
             mel_hat = safe_log(mel_rec)
             mel = safe_log(mel)
             mel_loss_new= torch.nn.functional.l1_loss(mel, mel_hat)
@@ -110,7 +122,7 @@ class VQSTFTWithDiscriminator(nn.Module):
 
         if optimizer_idx == 1:
             # second pass for discriminator update
-            
+
             loss_dac = self.dacdiscriminator.discriminator_loss(reconstructions.contiguous().detach(), inputs.contiguous().detach())
 
             real_score_mp, gen_score_mp, _, _ = self.multiperioddisc(y=inputs.contiguous().detach(), y_hat=reconstructions.contiguous().detach())
@@ -124,7 +136,7 @@ class VQSTFTWithDiscriminator(nn.Module):
             loss_mp /= len(loss_mp_real)
             loss_mrd /= len(loss_mrd_real)
             loss = loss_mp + self.mrd_loss_coeff * loss_mrd + loss_dac
-            
+
             log = {"{}/total_loss".format(split): loss.detach(),
                    "{}/multi_res_loss".format(split): loss_mrd.detach(),
                    "{}/multi_period_loss".format(split): loss_mp.detach(),

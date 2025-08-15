@@ -1,12 +1,11 @@
 import typing
-from typing import Tuple, List
+from typing import Dict, List, Optional, Tuple, Union
 
 import torch
 from torch import nn
 from torch.nn import Conv2d
 from torch.nn.utils import weight_norm
-from typing import Optional, List, Union, Dict, Tuple
-from torchaudio.transforms import  Resample
+from torchaudio.transforms import Resample
 
 
 class MultiPeriodDiscriminator(nn.Module):
@@ -190,7 +189,7 @@ class DiscriminatorR(nn.Module):
 
     def spectrogram(self, x: torch.Tensor) -> torch.Tensor:
         n_fft, hop_length, win_length = self.resolution
-        
+
         magnitude_spectrogram = torch.stft(
             x.squeeze(1),
             n_fft=n_fft,
@@ -215,7 +214,7 @@ class DiscriminatorCQT(nn.Module):
 
         self.in_channels = 1
         self.out_channels = 1
-        self.fs = sample_rate 
+        self.fs = sample_rate
         self.hop_length = hop_length
         self.n_octaves = n_octaves
         self.bins_per_octave = bins_per_octave

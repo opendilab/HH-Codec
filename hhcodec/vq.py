@@ -1,20 +1,18 @@
 from __future__ import annotations
 
 import random
-from math import ceil
-from functools import partial, cache
+from functools import cache, partial
 from itertools import zip_longest
+from math import ceil
 
 import torch
-from torch import nn, Tensor
-from torch.nn import Module, ModuleList
-import torch.nn.functional as F
 import torch.distributed as dist
-
-from vector_quantize_pytorch.sim_vq import SimVQ, pack_one
-
+import torch.nn.functional as F
+from einops import pack, rearrange, reduce, repeat, unpack
 from einx import get_at
-from einops import rearrange, repeat, reduce, pack, unpack
+from torch import Tensor, nn
+from torch.nn import Module, ModuleList
+from vector_quantize_pytorch.sim_vq import SimVQ, pack_one
 
 # helper functions
 
@@ -85,7 +83,7 @@ class ResidualSimVQ(Module):
     @property
     def codebook_size(self):
         return first(self.layers).codebook_size
-    
+
     @property
     def codebook_dim(self):
         return first(self.layers).codebook_dim
@@ -107,7 +105,7 @@ class ResidualSimVQ(Module):
             quantized = rearrange(quantized, 'b ... d -> b d ...')
 
         return quantized
-    
+
 
     def get_codes_from_indices(self, indices):
 
@@ -128,7 +126,7 @@ class ResidualSimVQ(Module):
 
         mask = indices == -1.
         indices = indices.masked_fill(mask, 0) # have it fetch a dummy code to be masked out later
-        
+
         all_codes = get_at('q [c] d, b n q -> q b n d', self.codebooks, indices)
 
         # mask out any codes that were dropout-ed
@@ -145,8 +143,8 @@ class ResidualSimVQ(Module):
         return all_codes
 
     # def get_codec_from_first_indices(self, indices):
-        
-    
+
+
     def get_output_from_indices(self, indices):
         all_codes = self.get_codes_from_indices(indices)
         summed_residual_codes = reduce(all_codes, 'q ... -> ...', 'sum')

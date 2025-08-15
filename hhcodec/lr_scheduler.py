@@ -1,6 +1,8 @@
 import math
-import torch
 from functools import partial
+
+import torch
+
 
 def fn_LinearWarmup(warmup_steps, step):
     if step < warmup_steps:  # linear warmup

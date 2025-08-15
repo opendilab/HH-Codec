@@ -1,40 +1,44 @@
 # Learned from: https://github.com/ZhangXInFD/SpeechTokenizer/blob/main/scripts/hubert_rep_extract.py
-from transformers import HubertModel, Wav2Vec2FeatureExtractor
-from pathlib import Path
-import torchaudio
-import torch
-import json
 import argparse
-from tqdm import tqdm
-import random
-import numpy as np
+import json
 import os
+import random
+from pathlib import Path
+
 import librosa
+import numpy as np
+import torch
+import torchaudio
+from tqdm import tqdm
+from transformers import HubertModel, Wav2Vec2FeatureExtractor
+
 from hhcodec.util import seed_everything
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    
+
     rep_dir = os.environ.get("REP_PATH")
+    if rep_dir is None:
+        raise ValueError("Environment variable REP_PATH is not set")
 
     parser.add_argument(
         "--dataset_name",
         type=str,
-        required=True,  
+        required=True,
         help="Name of the dataset.",
     )
 
     parser.add_argument(
         "--dataset_path",
         type=str,
-        required=True,  
+        required=True,
         help="Path to the dataset.",
     )
 
     parser.add_argument(
         "--seed",
         type=int,
-        default=0,  
+        default=0,
         help="Random seed for reproducibility (default: 0).",
     )
 
@@ -71,7 +75,7 @@ if __name__ == "__main__":
 
     print(f"A total of {len(file_list)} samples will be processed.")
     with torch.no_grad():
-        for i, audio_file in tqdm(enumerate(file_list)):
+        for i, audio_file in tqdm(enumerate(file_list), total=len(file_list)):
             wav_24k, sample_rate = librosa.load(audio_file, sr=24000, mono=1 == 1)
             wav_24k = torch.as_tensor(wav_24k)
             if wav_24k.size(-1) < segment_size:
@@ -84,8 +88,8 @@ if __name__ == "__main__":
             input_values = feature_extractor(
                 wav_16k.squeeze(0), sampling_rate=16000, return_tensors="pt"
             ).input_values
-            ouput = model(input_values.to(device), output_hidden_states=True)
-            rep = torch.mean(torch.stack(ouput.hidden_states), axis=0)
+            output = model(input_values.to(device), output_hidden_states=True)
+            rep = torch.mean(torch.stack(output.hidden_states), axis=0)
 
             if str(dataset_path) in audio_file:
                 rep_file = (
@@ -101,4 +105,4 @@ if __name__ == "__main__":
 
             train_list = os.path.join(rep_dir, f"{args.dataset_name}.txt")
             with open(train_list, "a+", encoding="utf-8") as f:
-                f.write(f'{audio_file}\t{rep_file}\n')
+                f.write(f"{audio_file}\t{rep_file}\n")

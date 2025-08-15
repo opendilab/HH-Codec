@@ -1,10 +1,9 @@
 from typing import List, Tuple
 
 import torch
+import torch.nn.functional as F
 import torchaudio
 from torch import nn
-
-import torch.nn.functional as F
 
 
 def safe_log(x: torch.Tensor, clip_val: float = 1e-7) -> torch.Tensor:

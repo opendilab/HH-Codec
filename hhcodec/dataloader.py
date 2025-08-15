@@ -1,22 +1,19 @@
-from torch.utils.data import Dataset, DataLoader
-from torch.nn.utils.rnn import pad_sequence
-import torchaudio
-import random
-import torch
-import numpy as np
-import lightning as L
-from librosa.filters import mel as librosa_mel_fn
 import math
 import os
+import pathlib
 import random
+from typing import List, Optional, Tuple
+
+import librosa
+import lightning as L
+import numpy as np
 import torch
 import torch.utils.data
-import numpy as np
-import librosa
+import torchaudio
 from librosa.filters import mel as librosa_mel_fn
-import pathlib
+from torch.nn.utils.rnn import pad_sequence
+from torch.utils.data import DataLoader, Dataset
 from tqdm import tqdm
-from typing import List, Tuple, Optional
 
 MAX_WAV_VALUE = 32767.0  # NOTE: 32768.0 -1 to prevent int16 overflow (results in popping sound in corner cases)
 
@@ -126,8 +123,8 @@ class audioDatasetModule(L.LightningDataModule):
         super(audioDatasetModule).__init__()
         self.batch_size = batch_size
         self.num_workers = num_workers
-        self.train_dataset_path = train_path 
-        self.val_dataset_path = val_path    
+        self.train_dataset_path = train_path
+        self.val_dataset_path = val_path
         self.prepare_data_per_node = True
         self._log_hyperparams=False
         self.allow_zero_length_dataloader_with_multiple_devices = False
@@ -144,7 +141,7 @@ class audioDatasetModule(L.LightningDataModule):
                 else:
                     output = torch.tensor([datum])
                 outputs.append(output)
-            return tuple(outputs)        
+            return tuple(outputs)
         for datum in zip(*data):
             if isinstance(datum[0], torch.Tensor):
                 output = pad_sequence(datum, batch_first=True)
@@ -152,7 +149,7 @@ class audioDatasetModule(L.LightningDataModule):
                 output = torch.tensor(list(datum))
             outputs.append(output)
         return tuple(outputs)
-    
+
 
     def prepare_data(self):
         pass
@@ -184,10 +181,10 @@ class audioDataset(Dataset):
         self.segment_size = segment_size
         self.sample_rate = 24000
         self.downsample_rate = 320
-        
+
     def __len__(self):
         return len(self.file_list)
-    
+
     def __getitem__(self, index):
         file = self.file_list[index].strip()
         audio_file, feature_file = file.split('\t')
@@ -208,8 +205,8 @@ class audioDataset(Dataset):
             audio = torch.nn.functional.pad(audio, (0, self.segment_size - audio.size(-1)), 'constant')
         audio = torch.FloatTensor(audio)
         audio = audio.unsqueeze(0)  # [B(1), self.segment_size]
-        
-        
+
+
         mel = mel_spectrogram(
                     audio,
                     1024,
@@ -222,5 +219,5 @@ class audioDataset(Dataset):
                     center=False,
                 )
         return audio.squeeze(0),feature,mel.squeeze()
-    
+
 

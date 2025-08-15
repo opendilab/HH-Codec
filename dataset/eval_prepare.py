@@ -1,14 +1,14 @@
-import sys, os
-from tqdm import tqdm
-from pathlib import Path
-import torchaudio
-import torch
-import json
 import argparse
-from tqdm import tqdm
-import random
-import numpy as np
+import json
 import os
+import random
+import sys
+from pathlib import Path
+
+import numpy as np
+import torch
+import torchaudio
+from tqdm import tqdm
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
@@ -16,12 +16,12 @@ if __name__ == '__main__':
     parser.add_argument('--dataset_path', type=str, help="Dataset path", default="/mnt/nfs3/zhangjinouwen/dataset/LibriTTS/test-clean")
     parser.add_argument('--exts', type=str, help="Audio file extensions, splitting with ','", default='wav,mp3,flac')
     args = parser.parse_args()
-    
+
     dataset_path = Path(args.dataset_path)
     exts = args.exts.split(',')
     file_list = [
-        str(file) for ext in exts 
-        for path in [dataset_path] 
+        str(file) for ext in exts
+        for path in [dataset_path]
         for file in path.glob(f'**/*.{ext}')
     ]
 
