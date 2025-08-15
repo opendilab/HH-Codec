@@ -1,13 +1,7 @@
 import argparse
-import json
 import os
-import random
-import sys
 from pathlib import Path
 
-import numpy as np
-import torch
-import torchaudio
 from tqdm import tqdm
 
 if __name__ == '__main__':
@@ -34,8 +28,12 @@ if __name__ == '__main__':
         prompt_text="0"
         prompt_wav="0"
         infer_text=audio_file.replace(".wav", ".normalized.txt")
-        with open(infer_text, 'r', encoding='utf-8') as file:
-            content = file.read()
+        if os.path.exists(infer_text):
+            with open(infer_text, 'r', encoding='utf-8', errors='replace') as file:
+                content = file.read().strip()
+        else:
+            print(f"Warning: Text file not found: {infer_text}")
+            content = ""
         out_line = '|'.join([utt, prompt_text, prompt_wav,content,audio_file])
         f_w.write(out_line + '\n')
     f_w.close()
