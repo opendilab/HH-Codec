@@ -14,13 +14,19 @@
 </p>
 
 ## 📚 Algorithm Overview
-🎉 Discrete Neural Codec With 24 Tokens Per Second (24KHZ) for Spoken Language Modeling!
-![](https://github.com/opendilab/HH-Codec/blob/master/main.png) 
+<p align="center">
+  🎉 Discrete Neural Codec With 24 Tokens Per Second (24KHZ) for Spoken Language Modeling!
+</p>
+<p align="center">
+  <img src="https://github.com/opendilab/HH-Codec/blob/main/main.png" width="50%">
+</p>
 
 Different color lines indicate the data flow used in inference and only for training. During inference, the audio is processed through the encoder and VQ1 to generate discrete quantization, which is then refined by the MLP. The decoder and fine-tuned BigVGAN subsequently reconstruct the Mel-spectrogram and audio.
 
 ## 📚 Experimental Results
-![](https://github.com/opendilab/HH-Codec/blob/master/exp.png) 
+<p align="center">
+  <img src="https://github.com/opendilab/HH-Codec/blob/main/exp.png" width="50%">
+</p>
 
 $N_q$ denotes the number of quantizers. The origin human voice's UTMOS of three dataset (LibriTTS test-other / LibriTTS test-clean / Seed-TTS-eval) is $3.48$ / $4.05$ / $3.57$.}
 ## ⚙️ Installation
