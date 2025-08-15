@@ -7,9 +7,7 @@
   <img src="https://img.shields.io/twitter/url?style=social&url=https%3A%2F%2Ftwitter.com%2Fopendilab" alt="Twitter">
   <img src="https://img.shields.io/badge/python-3.10-blue?logo=python&logoColor=white" alt="Python 3.10">
   <img src="https://img.shields.io/badge/pytorch-2.5.0-blue" alt="PyTorch">
-  <img src="https://img.shields.io/badge/wandb-0.16.6-orange?logo=wandb&logoColor=white" alt="wandb">
   <img src="https://img.shields.io/badge/lightning-2.2.1-purple?logo=lightning&logoColor=white" alt="PyTorch Lightning">
-  <img src="https://img.shields.io/twitter/url?style=social&url=https%3A%2F%2Ftwitter.com%2Fopendilab" alt="Twitter">
     <a href="https://arxiv.org/abs/2507.18897">
     <img src="https://img.shields.io/badge/arXiv-2507.18897-b31b1b.svg?logo=arxiv&logoColor=white" alt="arXiv:2507.18897">
   </a>
