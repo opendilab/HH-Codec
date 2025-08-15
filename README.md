@@ -2,6 +2,7 @@
 # HH-Codec: High Compression High-fidelity Discrete Neural Codec for Spoken Language Modeling
 🎉 Discrete Neural Codec With 24 Tokens Per Second (24KHZ) for Spoken Language Modeling!
 
+
 [![Twitter](https://img.shields.io/twitter/url?style=social&url=https%3A%2F%2Ftwitter.com%2Fopendilab)](https://twitter.com/opendilab)
 ![Python 3.10](https://img.shields.io/badge/python-3.10-blue?logo=python&logoColor=white)
 ![PyTorch](https://img.shields.io/badge/pytorch-2.5.0-blue)
@@ -18,9 +19,11 @@ git clone https://github.com/opendilab/HH-Codec.git
 cd HH-Codec 
 pip install -e .
 
-#if you want to eval by UTMOS
-pip install pip==24.0
+# Install Dependencies for UTMOS Evaluation
 pip install fairseq
+
+# If you encounter conflicts, try:
+pip install pip==24.0
 ```
 ## Train
 
@@ -49,9 +52,9 @@ python train.py fit --config configs/train.yaml
 You can simply use the training set from part 1, the configuration from part 2, and the training script from part 3 to reproduce the results of the model described in the paper with a single run. Since we are still refining the algorithm, an updated set of optimal model weights will be released after the final version of the paper is accepted by the journal.
 ```python
 wav, sr = torchaudio.load(audio_path).to(device))
-wav = convert_audio(wav, sr, 24000, 1).unsqueeze(0).unsqueeze(0) #eg. [B,1,24000]
+wav = convert_audio(wav, sr, 24000, 1).unsqueeze(0).unsqueeze(0)  
 # Generating discrete codecs
-_, _, _, _,quant,_,index = model.encode(audio)
+_, _, _, _, quant, _, index = model.encode(audio)
 # Get quant from index only
 quant = model.quantize.indices_to_codes(index)
 # Reconstruct audio from raw wav
