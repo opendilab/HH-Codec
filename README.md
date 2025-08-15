@@ -9,14 +9,20 @@
   <img src="https://img.shields.io/badge/pytorch-2.5.0-blue" alt="PyTorch">
   <img src="https://img.shields.io/badge/lightning-2.2.1-purple?logo=lightning&logoColor=white" alt="PyTorch Lightning">
     <a href="https://arxiv.org/abs/2507.18897">
-    <img src="https://img.shields.io/badge/arXiv-2507.18897-b31b1b.svg?logo=arxiv&logoColor=white" alt="arXiv:2507.18897">
-  </a>
+    <img src="https://img.shields.io/badge/arXiv-2507.18897-b31b1b.svg?logo=arxiv&logoColor=white" alt="arXiv:2507.18897"></a>
     <a href="https://github.com/opendilab/HH-Codec/"><img src="https://img.shields.io/github/stars/opendilab/HH-Codec?style=social" alt="GitHub Repo stars"></a>
-
-
 </p>
 
+## 📚 Algorithm Overview
 🎉 Discrete Neural Codec With 24 Tokens Per Second (24KHZ) for Spoken Language Modeling!
+![](https://github.com/opendilab/HH-Codec/blob/master/main.png) 
+
+Different color lines indicate the data flow used in inference and only for training. During inference, the audio is processed through the encoder and VQ1 to generate discrete quantization, which is then refined by the MLP. The decoder and fine-tuned BigVGAN subsequently reconstruct the Mel-spectrogram and audio.
+
+## 📚 Experimental Results
+![](https://github.com/opendilab/HH-Codec/blob/master/exp.png) 
+
+$N_q$ denotes the number of quantizers. The origin human voice's UTMOS of three dataset (LibriTTS test-other / LibriTTS test-clean / Seed-TTS-eval) is $3.48$ / $4.05$ / $3.57$.}
 ## ⚙️ Installation
 To install HHCodec, follow these steps:
 ```python
