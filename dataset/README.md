@@ -7,12 +7,12 @@ To train the HH-Codec, the first step is to download the dataset. We recommend u
 - [Emilia-Dataset](https://huggingface.co/datasets/amphion/Emilia-Dataset)
 
 ```shell
-  wget https://openslr.magicdatatech.com/resources/12/train-clean-100.tar.gz
-  wget https://openslr.magicdatatech.com/resources/12/train-clean-360.tar.gz
-  wget https://openslr.magicdatatech.com/resources/12/test-clean.tar.gz
-  wget https://openslr.magicdatatech.com/resources/12/test-other.tar.gz
-  wget https://datashare.ed.ac.uk/download/DS_10283_3443.zip
-  wget https://datashare.ed.ac.uk/download/DS_10283_2651.zip
+wget https://openslr.magicdatatech.com/resources/12/train-clean-100.tar.gz
+wget https://openslr.magicdatatech.com/resources/12/train-clean-360.tar.gz
+wget https://openslr.magicdatatech.com/resources/12/test-clean.tar.gz
+wget https://openslr.magicdatatech.com/resources/12/test-other.tar.gz
+wget https://datashare.ed.ac.uk/download/DS_10283_3443.zip
+wget https://datashare.ed.ac.uk/download/DS_10283_2651.zip
 ```
 
 You can extract semantic teacher representations directly from raw audio waveforms. We provide a script to demonstrate how to obtain HuBERT representations.
@@ -27,8 +27,8 @@ python dataset/hubert_mel.py --dataset_name
 ```
 
 After running the script, a file will be generated at:
-```json
-  dataset/LJSpeech.txt
+```
+dataset/LJSpeech.txt
 ```
 Each line maps the original audio file path to its corresponding HuBERT embedding location.
 

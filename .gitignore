@@ -2,3 +2,11 @@
 hhcodec/__pycache__/
 
 hhcodec.egg-info/
+
+hhcodec/discriminator/__pycache__/
+
+hhcodec/losses/__pycache__/
+
+hhcodec/neuralmodel/__pycache__/
+
+HH_codec/
