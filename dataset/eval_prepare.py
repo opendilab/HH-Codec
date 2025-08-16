@@ -22,7 +22,7 @@ if __name__ == '__main__':
     if not os.path.exists(args.wavtext):
         os.makedirs(os.path.dirname(args.wavtext), exist_ok=True)
     f_w = open(args.wavtext, 'w')
-    for i, audio_file in tqdm(enumerate(file_list)):
+    for i, audio_file in tqdm(enumerate(file_list), total=len(file_list)):
         file_name = os.path.basename(audio_file)
         utt = os.path.splitext(file_name)[0]
         prompt_text="0"
