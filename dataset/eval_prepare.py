@@ -1,13 +1,7 @@
 import argparse
-import json
 import os
-import random
-import sys
 from pathlib import Path
 
-import numpy as np
-import torch
-import torchaudio
 from tqdm import tqdm
 
 if __name__ == '__main__':
@@ -28,14 +22,18 @@ if __name__ == '__main__':
     if not os.path.exists(args.wavtext):
         os.makedirs(os.path.dirname(args.wavtext), exist_ok=True)
     f_w = open(args.wavtext, 'w')
-    for i, audio_file in tqdm(enumerate(file_list)):
+    for i, audio_file in tqdm(enumerate(file_list), total=len(file_list)):
         file_name = os.path.basename(audio_file)
         utt = os.path.splitext(file_name)[0]
         prompt_text="0"
         prompt_wav="0"
         infer_text=audio_file.replace(".wav", ".normalized.txt")
-        with open(infer_text, 'r', encoding='utf-8') as file:
-            content = file.read()
+        if os.path.exists(infer_text):
+            with open(infer_text, 'r', encoding='utf-8', errors='replace') as file:
+                content = file.read().strip()
+        else:
+            print(f"Warning: Text file not found: {infer_text}")
+            content = ""
         out_line = '|'.join([utt, prompt_text, prompt_wav,content,audio_file])
         f_w.write(out_line + '\n')
     f_w.close()

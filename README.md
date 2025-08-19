@@ -57,7 +57,7 @@ Ensure your dataset is preprocessed by following the instructions in [`dataset`]
 ### Step 2: Modify Configuration Files
 Before starting training, update the configuration settings
 ```python
-# Open and modify the following file "configs/train.yaml"
+# Open and modify the following file "config/train.yaml"
 # Adjust parameters such as:
 # - log settings
 # - train_path
@@ -69,7 +69,7 @@ Before starting training, update the configuration settings
 Once the dataset is prepared and the configuration is set, launch the training process:
 ```python
 cd HH-Codec
-python train.py fit --config configs/train.yaml
+python train.py fit --config config/train.yaml
 ```
 
 ## 🧩 How to use HH-codec 

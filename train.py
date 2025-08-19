@@ -14,14 +14,12 @@ from swanlab.integration.pytorch_lightning import SwanLabLogger
 from torch.utils.data import DataLoader, Dataset, random_split
 from torch.utils.data.dataloader import default_collate as custom_collate
 
-torch.backends.cudnn.deterministic = True #True
-torch.backends.cudnn.benchmark = False #False
+torch.backends.cudnn.deterministic = True  # True
+torch.backends.cudnn.benchmark = False  # False
 
 
 def main():
-    cli = LightningCLI(
-        save_config_kwargs={"overwrite": True},
-    )
+    cli = LightningCLI(save_config_kwargs={"overwrite": True})
 
 
 if __name__ == "__main__":
