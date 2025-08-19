@@ -76,7 +76,7 @@ wav = convert_audio(wav, sr, 24000, 1).unsqueeze(0).unsqueeze(0)
 _, _, _, _, quant, _, index = model.encode(audio)
 # Get quant from index only
 quant = model.quantize.indices_to_codes(index)
-# Reconstruct audio from raw wav
+# Reconstruct audio
 reconstructed_mel, reconstructed_audios = model.decode(quant)
 ```
 

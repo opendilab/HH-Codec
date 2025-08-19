@@ -99,7 +99,7 @@ def main(args):
         rawwav=rawwav.to(DEVICE)
         prewav=prewav.to(DEVICE)
 
-        rawwav_16k=torchaudio.functional.resample(rawwav, orig_freq=rawwav_sr, new_freq=16000)  #测试UTMOS的时候必须重采样
+        rawwav_16k=torchaudio.functional.resample(rawwav, orig_freq=rawwav_sr, new_freq=16000)  # Must resample when testing UTMOS
         prewav_16k=torchaudio.functional.resample(prewav, orig_freq=prewav_sr, new_freq=16000)
 
         # 1.UTMOS

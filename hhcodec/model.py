@@ -132,8 +132,8 @@ class VQModel(L.LightningModule):
 
     def get_ema_model(self):
         if self.use_ema:
-            self.model_ema.copy_to(self)  # 直接应用 EMA 参数
-        return self  # 返回修改后的模型
+            self.model_ema.copy_to(self)  # Directly apply EMA parameters
+        return self  # Return the modified model
 
     def state_dict(self, *args, destination=None, prefix='', keep_vars=False):
         '''
