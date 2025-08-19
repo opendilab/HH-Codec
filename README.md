@@ -1,5 +1,10 @@
 
 # HH-Codec: High Compression High-fidelity Discrete Neural Codec for Spoken Language Modeling
+
+<p align="center">
+  English | <a href="README_zh.md">中文</a>
+</p>
+
 <p align="center">
   If you find this project useful, please give us a star 🌟.
 </p>

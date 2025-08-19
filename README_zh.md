@@ -1,7 +1,7 @@
 # HH-Codec: 用于语音语言大模型的高压缩高保真离散编解码器（Tokenizer/Codec）
 
 <p align="center">
-  🇨🇳 中文 | <a href="README.md">🇺🇸 English</a>
+  中文 | <a href="README.md"> English</a>
 </p>
 
 <p align="center">
