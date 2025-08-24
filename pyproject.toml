@@ -18,6 +18,24 @@ dependencies = [
     "timm",
     "torchaudio",
     "transformers",
+    "lightning==2.2.5",
+    "jsonargparse[signatures]>=4.27.7",
+    "albumentations==1.4.4",
+    "lpips",
+    "omegaconf",
+    "torchcrepe",
+    "pystoi",
+    "funasr",
+    "zhconv",
+    "pydub",
+    "onnx",
+    "onnxconverter-common",
+    "fire",
+    "jiwer",
+    "zhon==2.1.1",
+    "lion_pytorch",
+    "beartype",
+    "accelerate"
 ]
 
 [project.optional-dependencies]
