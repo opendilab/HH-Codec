@@ -52,15 +52,26 @@ pip install pip==24.0
 ## 🚀 Train
 
 ### Step 1: Prepare the Training Dataset
-Ensure your dataset is preprocessed by following the instructions in [`dataset`](dataset)
+Ensure your dataset is preprocessed by following the instructions in [`dataset`](dataset),
+After running the script, a file will be generated at REP_PATH :
+```json
+  dataset/Hubert/libritts_train_clean_100.txt
+```
+Each line maps the original audio file path to its corresponding HuBERT embedding location.
+
+The following datasets need to be processed in this manner to achieve the metrics stated in the paper:
+- [LibriSpeech](http://www.openslr.org/12)  
+- [VCTK](https://datashare.ed.ac.uk/handle/10283/2651)  
+- [LJSpeech](https://keithito.com/LJ-Speech-Dataset/)  
+- [Emilia-Dataset](https://huggingface.co/datasets/amphion/Emilia-Dataset)
 
 ### Step 2: Modify Configuration Files
 Before starting training, update the configuration settings
 ```python
-# Open and modify the following file "configs/train.yaml"
+# Open and modify the following file "config/train_with_8gpu"
 # Adjust parameters such as:
 # - log settings
-# - train_path
+# - train_path "dataset/Hubert/libritts_train_clean_100.txt"
 # - save_dir
 # - device (e.g., CPU/GPU)
 ```

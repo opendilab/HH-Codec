@@ -159,9 +159,14 @@ class SpeechTokenizerDataModule(L.LightningDataModule):
 
     def setup(self, stage=None):
         if stage == "fit" or stage is None:
-            self.train = audioDataset(self.train_dataset_path,65536,False)
+            train_file_list = []
+            for path in self.train_dataset_path:
+                with open(path, 'r') as f:
+                    train_file_list.extend(f.readlines())
+            random.shuffle(train_file_list)
+            self.train = audioDataset(train_file_list,65536,False)
         if stage == "test" or stage is None:
-            self.test = audioDataset(self.train_dataset_path,65536,False)
+            self.test = audioDataset(self.val_dataset_path,65536,False)
 
     def train_dataloader(self):
         return DataLoader(self.train, batch_size=self.batch_size, num_workers=self.num_workers, shuffle=True,collate_fn=self.pad_collate_fn)
@@ -171,13 +176,13 @@ class SpeechTokenizerDataModule(L.LightningDataModule):
 
 class audioDataset(Dataset):
     def __init__(self,
-                 file_path,
+                 file_list,
                  segment_size,
                  if_val):
         super().__init__()
-        with open(file_path, 'r') as f:
-            self.file_list = f.readlines()
+        self.file_list = file_list
         self.segment_size = segment_size
+        self.sample_rate = 24000
         self.downsample_rate = 320
         
     def __len__(self):
@@ -186,27 +191,27 @@ class audioDataset(Dataset):
     def __getitem__(self, index):
         file = self.file_list[index].strip()
         audio_file, feature_file = file.split('\t')
-        audio_24k, sr = torchaudio.load(audio_file)
+        audio, sr = torchaudio.load(audio_file)
         feature = torch.from_numpy(np.load(feature_file)).squeeze(0)
-        audio_24k = audio_24k.mean(axis=0)
-        
-
-        if audio_24k.size(-1) > self.segment_size:
-            max_audio_start = audio_24k.size(-1) - self.segment_size
+        audio = audio.mean(axis=0)
+        if sr != self.sample_rate:
+            audio = torchaudio.functional.resample(audio, sr, self.sample_rate)
+        if audio.size(-1) > self.segment_size:
+            max_audio_start = audio.size(-1) - self.segment_size
             audio_start = random.randint(0, max_audio_start)
             audio_start_16k = int(audio_start * 16 / 24)
             segment_size_16k= 43691
-            audio_24k = audio_24k[audio_start:audio_start+self.segment_size]
+            audio= audio[audio_start:audio_start+self.segment_size]
             feature_start = min(int(audio_start_16k / self.downsample_rate), feature.size(0) - 136)
             feature = feature[feature_start:feature_start + 136, :]
         else:
-            audio_24k = torch.nn.functional.pad(audio_24k, (0, self.segment_size - audio_24k.size(-1)), 'constant')
-        audio_24k = torch.FloatTensor(audio_24k)
-        audio_24k = audio_24k.unsqueeze(0)  # [B(1), self.segment_size]
+            audio = torch.nn.functional.pad(audio, (0, self.segment_size - audio.size(-1)), 'constant')
+        audio = torch.FloatTensor(audio)
+        audio = audio.unsqueeze(0)  # [B(1), self.segment_size]
         
         
         mel = mel_spectrogram(
-                    audio_24k,
+                    audio,
                     1024,
                     100,
                     24000,
@@ -216,7 +221,7 @@ class audioDataset(Dataset):
                     None,
                     center=False,
                 )
-        return audio_24k.squeeze(0),feature,mel.squeeze()
+        return audio.squeeze(0),feature,mel.squeeze()
     
 
 if __name__ == "__main__":

@@ -12,17 +12,17 @@ trainer:
   callbacks:
     - class_path: lightning.pytorch.callbacks.ModelCheckpoint
       init_args:
-        dirpath: "HH_Codec/8k_ration_20_loss" 
+        dirpath: "exp/8k_ration_20" 
         save_top_k: -1 
     - class_path: lightning.pytorch.callbacks.LearningRateMonitor
       init_args:
         logging_interval: step
   logger:
-    class_path: lightning.pytorch.loggers.WandbLogger
-    init_args:
-        save_dir: "HH_Codec/8k_ration_20_loss" 
-        project: "endresult_tmp"  
-        name: "mel_big"           
+      class_path: swanlab.integration.pytorch_lightning.SwanLabLogger
+      init_args:
+          project: "endresult_tmp"  
+          experiment_name: "mel"
+          save_dir: "exp/8k_ration_20"      
 
 model:
   class_path: hhcodec.model.VQModel
@@ -60,5 +60,9 @@ data:
     num_workers: 8
     train_path : ["",""]
     val_path : ""
-
-ckpt_path: null
+    #the train_PATH is the path of the .txt file generated after running dataset/hubert_mel.py
+    #the val_path is the path of the .txt file generated after running dataset/hubert
+    #such as 
+    # train_path : ["/home/xrk/xue/HH-Codec/dataset/Hubert/libritts_train_clean_100.txt"]
+    # val_path : "/home/xrk/xue/HH-Codec/dataset/Hubert/libritts_train_clean_100.txt"
+ckpt_path: null # "path/to/ckpt" to resume training from a checkpoint

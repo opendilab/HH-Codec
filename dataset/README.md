@@ -16,20 +16,20 @@ To train the HH-Codec, the first step is to download the dataset. We recommend u
   wget https://datashare.ed.ac.uk/download/DS_10283_2651.zip
 ```
 
-You can extract semantic teacher representations directly from raw audio waveforms. We provide a script to demonstrate how to obtain HuBERT representations.
+You can extract semantic teacher representations directly from raw audio waveforms to 'HH-Codec/dataset'. We provide a script to demonstrate how to obtain HuBERT representations.
 
 ```python
 cd /root/code/HH-Codec && conda activate codec
-export REP_PATH="/fs-computility/ai-shen/shared/RFTInfra/xrk/dataset/rep"
-python dataset/hubert_mel.py --dataset_name "libritts_train_clean_360" --dataset_path ""
-python dataset/hubert_mel.py --dataset_name "libritts_train_clean_100" --dataset_path ""
-python dataset/hubert_mel.py --dataset_name "LJspeech" --dataset_path "/fs-computility/ai-shen/shared/RFTInfra/xrk/dataset/LJSpeech-1.1"
-python dataset/hubert_mel.py --dataset_name 
+export REP_PATH="dataset/Hubert"
+python dataset/hubert_mel.py --dataset_name "libritts_train_clean_360" --dataset_path "dataset/LibriSpeech/train-clean-360"
+python dataset/hubert_mel.py --dataset_name "libritts_train_clean_100" --dataset_path "dataset/LibriSpeech/train-clean-100"
+python dataset/hubert_mel.py --dataset_name "LJspeech" --dataset_path "dataset/LJSpeech-1.1"
+python dataset/hubert_mel.py --dataset_name  "" --dataset_path ""
 ```
 
-After running the script, a file will be generated at:
+After running the script, a file will be generated at REP_PATH :
 ```json
-  dataset/LJSpeech.txt
+  dataset/Hubert/libritts_train_clean_100.txt
 ```
 Each line maps the original audio file path to its corresponding HuBERT embedding location.
 
