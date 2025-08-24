@@ -7,6 +7,7 @@ To train the HH-Codec, the first step is to download the dataset. We recommend u
 - [Emilia-Dataset](https://huggingface.co/datasets/amphion/Emilia-Dataset)
 
 ```shell
+  cd HH-Codec/dataset
   wget https://openslr.magicdatatech.com/resources/12/train-clean-100.tar.gz
   wget https://openslr.magicdatatech.com/resources/12/train-clean-360.tar.gz
   wget https://openslr.magicdatatech.com/resources/12/test-clean.tar.gz

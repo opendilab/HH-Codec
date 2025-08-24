@@ -13,7 +13,7 @@ classifiers = [
 
 dependencies = [
     "bigvgan",
-    "swanlab",
+    "wandb",
     "vector_quantize_pytorch",
     "timm",
     "torchaudio",

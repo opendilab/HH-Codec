@@ -2,7 +2,7 @@ seed_everything: true
 trainer:
   accelerator: gpu
   strategy: ddp_find_unused_parameters_true
-  devices: 8
+  devices: 8 #which gpus to use
   num_nodes: 1
   precision: 32
   max_epochs: 50
@@ -12,7 +12,7 @@ trainer:
   callbacks:
     - class_path: lightning.pytorch.callbacks.ModelCheckpoint
       init_args:
-        dirpath: "HH_codec/8k_ration_20_loss" 
+        dirpath: "HH_Codec/8k_ration_20_loss" 
         save_top_k: -1 
     - class_path: lightning.pytorch.callbacks.LearningRateMonitor
       init_args:
@@ -20,7 +20,7 @@ trainer:
   logger:
     class_path: lightning.pytorch.loggers.WandbLogger
     init_args:
-        save_dir: "HH_codec/8k_ration_20_loss" 
+        save_dir: "HH_Codec/8k_ration_20_loss" 
         project: "endresult_tmp"  
         name: "mel_big"           
 
@@ -47,7 +47,6 @@ model:
         mrd_loss_coeff: 1.0
 
 
-    distrillmodel: hubert
     sample_rate: 24000
     audio_normalize: false
     learning_rate: 1e-4

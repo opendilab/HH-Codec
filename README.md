@@ -69,7 +69,7 @@ Before starting training, update the configuration settings
 Once the dataset is prepared and the configuration is set, launch the training process:
 ```python
 cd HH-Codec
-python train.py fit --config configs/train.yaml
+python train.py fit --config config/train_with_8gpu.yaml
 ```
 
 ## 🧩 How to use HH-codec 
