@@ -68,7 +68,7 @@ The following datasets need to be processed in this manner to achieve the metric
 ### Step 2: Modify Configuration Files
 Before starting training, update the configuration settings
 ```python
-# Open and modify the following file "config/train_with_8gpu"
+# Open and modify the following file "config/train_with_8gpu.yaml"
 # Adjust parameters such as:
 # - log settings
 # - train_path "dataset/Hubert/libritts_train_clean_100.txt"

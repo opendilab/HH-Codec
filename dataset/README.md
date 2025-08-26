@@ -7,13 +7,13 @@ To train the HH-Codec, the first step is to download the dataset. We recommend u
 - [Emilia-Dataset](https://huggingface.co/datasets/amphion/Emilia-Dataset)
 
 ```shell
-  cd HH-Codec/dataset
-  wget https://openslr.magicdatatech.com/resources/12/train-clean-100.tar.gz
-  wget https://openslr.magicdatatech.com/resources/12/train-clean-360.tar.gz
-  wget https://openslr.magicdatatech.com/resources/12/test-clean.tar.gz
-  wget https://openslr.magicdatatech.com/resources/12/test-other.tar.gz
-  wget https://datashare.ed.ac.uk/download/DS_10283_3443.zip
-  wget https://datashare.ed.ac.uk/download/DS_10283_2651.zip
+cd HH-Codec/dataset
+wget https://openslr.magicdatatech.com/resources/12/train-clean-100.tar.gz
+wget https://openslr.magicdatatech.com/resources/12/train-clean-360.tar.gz
+wget https://openslr.magicdatatech.com/resources/12/test-clean.tar.gz
+wget https://openslr.magicdatatech.com/resources/12/test-other.tar.gz
+wget https://datashare.ed.ac.uk/download/DS_10283_3443.zip
+wget https://datashare.ed.ac.uk/download/DS_10283_2651.zip
 ```
 
 You can extract semantic teacher representations directly from raw audio waveforms to 'HH-Codec/dataset'. We provide a script to demonstrate how to obtain HuBERT representations.
@@ -27,10 +27,11 @@ python dataset/hubert_mel.py --dataset_name "LJspeech" --dataset_path "dataset/L
 python dataset/hubert_mel.py --dataset_name  "" --dataset_path ""
 ```
 
-After running the script, a file will be generated at REP_PATH :
-```json
-  dataset/Hubert/libritts_train_clean_100.txt
+After running the script, a file will be generated at:
 ```
+dataset/Hubert/libritts_train_clean_100.txt
+=======
+After running the script, a file will be generated at REP_PATH :
 Each line maps the original audio file path to its corresponding HuBERT embedding location.
 
 
