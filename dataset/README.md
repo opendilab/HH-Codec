@@ -30,8 +30,7 @@ python dataset/hubert_mel.py --dataset_name  "" --dataset_path ""
 After running the script, a file will be generated at:
 ```
 dataset/Hubert/libritts_train_clean_100.txt
-=======
-After running the script, a file will be generated at REP_PATH :
+```
 Each line maps the original audio file path to its corresponding HuBERT embedding location.
 
 

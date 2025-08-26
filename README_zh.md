@@ -53,15 +53,28 @@ pip install pip==24.0
 ## 🚀 训练
 
 ### 步骤1：准备训练数据集
-确保您的数据集已按照 [`dataset`](dataset) 中的说明进行预处理
+确保您的数据集已按照 [`dataset`](dataset) 中的说明进行预处理。
+运行脚本后，将在 REP_PATH 生成文件：
+```
+dataset/Hubert/libritts_train_clean_100.txt
+```
+每行将原始音频文件路径映射到其对应的 HuBERT 嵌入位置。
+
+以下数据集需要按此方式处理才能达到论文中声明的指标：
+- [LibriSpeech](http://www.openslr.org/12)  
+- [VCTK](https://datashare.ed.ac.uk/handle/10283/2651)  
+- [LJSpeech](https://keithito.com/LJ-Speech-Dataset/)  
+- [Emilia-Dataset](https://huggingface.co/datasets/amphion/Emilia-Dataset)
+
+有关更详细的数据集准备说明，请参阅 [dataset/README](dataset/README_zh.md)。
 
 ### 步骤2：修改配置文件
 在开始训练之前，更新配置设置
 ```python
-# 打开并修改以下文件 "configs/train.yaml"
+# 打开并修改以下文件 "config/train_with_8gpu.yaml"
 # 调整参数，例如：
 # - 日志设置
-# - 训练路径
+# - 训练路径 "dataset/Hubert/libritts_train_clean_100.txt"
 # - 保存目录
 # - 设备（例如，CPU/GPU）
 ```

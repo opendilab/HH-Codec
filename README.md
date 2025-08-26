@@ -49,13 +49,15 @@ pip install fairseq
 # If you encounter conflicts, try:
 pip install pip==24.0
 ```
+
+
 ## 🚀 Train
 
 ### Step 1: Prepare the Training Dataset
 Ensure your dataset is preprocessed by following the instructions in [`dataset`](dataset),
 After running the script, a file will be generated at REP_PATH :
-```json
-  dataset/Hubert/libritts_train_clean_100.txt
+```
+dataset/Hubert/libritts_train_clean_100.txt
 ```
 Each line maps the original audio file path to its corresponding HuBERT embedding location.
 
@@ -64,6 +66,8 @@ The following datasets need to be processed in this manner to achieve the metric
 - [VCTK](https://datashare.ed.ac.uk/handle/10283/2651)  
 - [LJSpeech](https://keithito.com/LJ-Speech-Dataset/)  
 - [Emilia-Dataset](https://huggingface.co/datasets/amphion/Emilia-Dataset)
+
+For more detailed dataset preparation instructions, please refer to [dataset/README](dataset/README.md).
 
 ### Step 2: Modify Configuration Files
 Before starting training, update the configuration settings
